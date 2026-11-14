@@ -14,25 +14,16 @@ var app = new Vue({
       currentEditorTheme: 'base16-light',
       editor: null,
       builtinFonts: [
-        { label: '衬线', value: "Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif"},
+        { label: '雁栖湖', value: yanqiTheme.bodyFont },
         { label: '无衬线', value: "Roboto, Oxygen, Ubuntu, Cantarell, PingFangSC-light, PingFangTC-light, 'Open Sans', 'Helvetica Neue', sans-serif"}
       ],
-      currentFont: "Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
+      currentFont: yanqiTheme.bodyFont,
       currentSize: '16px',
       sizeOption: [
         { label: '16px', value: '16px', desc: '默认' },
         { label: '17px', value: '17px', desc: '正常' },
         { label: '18px', value: '18px', desc: '稍大' }
       ],
-      currentTheme: 'default',
-      themeOption: [
-        { label: 'default', value: 'default', author: 'Lyric'},
-        { label: 'lupeng', value: 'lupeng', author: '鲁鹏'}
-      ],
-      styleThemes: {
-        default: defaultTheme,
-        lupeng: lupengTheme
-      },
       aboutDialogVisible: false
     }
   },
@@ -48,9 +39,8 @@ var app = new Vue({
     this.editor.on("change", function(cm, change) {
       self.refresh()
     })
-    // this.currentFont = this.builtinFonts[0],
     this.wxRenderer = new WxRenderer({
-      theme: this.styleThemes.default,
+      theme: yanqiTheme,
       fonts: this.currentFont,
       size: this.currentSize
     })
@@ -81,14 +71,6 @@ var app = new Vue({
     sizeChanged: function(size){
       this.wxRenderer.setOptions({
         size: size
-      })
-      this.refresh()
-    },
-    themeChanged: function(themeName){
-      var themeName = themeName;
-      var themeObject = this.styleThemes[themeName];
-      this.wxRenderer.setOptions({
-        theme: themeObject
       })
       this.refresh()
     },

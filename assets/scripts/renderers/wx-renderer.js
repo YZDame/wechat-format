@@ -17,33 +17,24 @@ var WxRenderer = function (opts) {
       'font-family': this.opts.fonts,
       'font-size': this.opts.size
     })
-    var base_block = COPY(base, {
-      'margin': '20px 10px'
-    })
+    var base_block = COPY(base, themeTpl.BASE_BLOCK)
     for (var ele in themeTpl.inline) {
       if (themeTpl.inline.hasOwnProperty(ele)) {
-        var style = themeTpl.inline[ele]
-        if (ele === 'codespan') {
-          style['font-family'] = FONT_FAMILY_MONO
-        }
-        mapping[ele] = COPY(base, style)
+        mapping[ele] = COPY({}, themeTpl.inline[ele])
       }
     }
+    mapping.codespan['font-family'] = FONT_FAMILY_MONO
     for (var ele in themeTpl.block) {
       if (themeTpl.block.hasOwnProperty(ele)) {
-        var style = themeTpl.block[ele]
-        if (ele === 'code') {
-          style['font-family'] = FONT_FAMILY_MONO
-        }
-        mapping[ele] = COPY(base_block, style)
+        mapping[ele] = COPY(base_block, themeTpl.block[ele])
       }
     }
     return mapping
   }
 
-  var S = function (tokenName) {
+  var S = function (tokenName, dict) {
     var arr = []
-    var dict = styleMapping[tokenName]
+    dict = dict || styleMapping[tokenName]
     for (const key in dict) {
       arr.push(key + ':' + dict[key])
     }
@@ -83,11 +74,8 @@ var WxRenderer = function (opts) {
     FuriganaMD.register(renderer);
   
     renderer.heading = function (text, level) {
-      if (level < 3) {
-        return '<h2 ' + S('h2') + '>' + text + '</h2>'
-      } else {
-        return '<h3 ' + S('h3') + '>' + text + '</h3>'
-      }
+      var tag = 'h' + level
+      return '<' + tag + ' ' + S(tag) + '>' + text + '</' + tag + '>'
     }
     renderer.paragraph = function (text) {
       return '<p ' + S('p') + '>' + text + '</p>'
@@ -149,17 +137,22 @@ var WxRenderer = function (opts) {
         }
       }
     }
-    renderer.strong = renderer.em = function (text) {
-      return '<strong ' + S('strong') + '>' + text + '</strong>'; 
+    renderer.strong = function (text) {
+      return '<strong ' + S('strong') + '>' + text + '</strong>'
+    }
+    renderer.em = function (text) {
+      return '<em ' + S('em') + '>' + text + '</em>'
     }
     renderer.table = function (header, body) {
-      return '<table ' + S('table') + '><thead ' + S('thead') + '>' + header + '</thead><tbody>' + body + '</tbody></table>'; 
+      return '<table ' + S('table') + '><thead>' + header + '</thead><tbody>' + body + '</tbody></table>';
     }
     renderer.tablecell = function (text, flags) {
-      return '<td ' + S('td') + '>' + text + '</td>'; 
+      var tag = flags.header ? 'th' : 'td'
+      var style = COPY(styleMapping[tag], flags.align ? { 'text-align': flags.align } : {})
+      return '<' + tag + ' ' + S(tag, style) + '>' + text + '</' + tag + '>'
     }
-    renderer.hr = function(){
-      return '<hr style="border-style: solid;border-width: 1px 0 0;border-color: rgba(0,0,0,0.1);-webkit-transform-origin: 0 0;-webkit-transform: scale(1, 0.5);transform-origin: 0 0;transform: scale(1, 0.5);">';
+    renderer.hr = function () {
+      return '<hr ' + S('hr') + '>'
     }
     return renderer
   }

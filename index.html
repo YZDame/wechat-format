@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,14 +50,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Themes">
-            <el-select v-model="currentTheme" size="mini" placeholder="选择主题样式" @change="themeChanged">
-              <el-option v-for="theme in themeOption" :key="theme.value" :label="theme.label" :value="theme.value">
-                <span style="float: left">{{ theme.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ theme.author }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
         <el-button class="about" @click="aboutDialogVisible = true">关于</el-button>
       </el-header>
@@ -91,7 +83,8 @@
         <p>能解决 <code>ul</code> 和 <code>ol</code> 渲染时样式被微信编辑器重置的问题；</p>
         <p>能把外部链接自动转为参考文献索引，并且附在文章末尾</p>
         <p>&nbsp;</p>
-        <h3>关于我</h3>
+        <p>文章排版采用<a href="https://cloud.tencent.com/developer/article/1815183">雁栖湖主题</a>，原作者为牧码。</p>
+        <h3>关于原作者</h3>
         <p>我是 Lyric。如果你喜欢我的工具，可以：</p>
         <p>关注我的公众号 "<code>iamlyricw</code>"，<a href='https://lyric.im' target='_blank' class='url'>博客</a> 或 <a href='https://github.com/lyricat/wechat-format' target='_blank' class='url'>Github</a></p>
         <p>
@@ -114,17 +107,9 @@
   <script src="codemirror/codemirror.js"></script>
   <script src="codemirror/mode/markdown/markdown.js"></script>
 
-  <script src="assets/scripts/themes/default.js"></script>
-  <script src="assets/scripts/themes/lupeng.js"></script>
+  <script src="assets/scripts/themes/yanqi.js"></script>
   <script src="assets/scripts/renderers/wx-renderer.js"></script>
   <script src="assets/scripts/editor.js"></script>
   
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4178606-10"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'UA-4178606-10');
-  </script>
 </body>
 </html>

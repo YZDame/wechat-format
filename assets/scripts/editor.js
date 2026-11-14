@@ -3,6 +3,7 @@ const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
 const themeButton = document.getElementById('theme-toggle');
 const copyButton = document.getElementById('copy');
 const output = document.getElementById('output');
+const previewPane = output.parentElement;
 const statusMessage = document.getElementById('status');
 const workspace = document.querySelector('.workspace');
 const splitter = document.getElementById('splitter');
@@ -24,6 +25,46 @@ const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
   lineWrapping: true,
 });
 editor.getInputField().setAttribute('aria-label', 'Markdown 正文');
+
+// Sync vertical progress across different content heights and ignore reflected scroll events.
+let expectedEditorTop;
+let expectedPreviewTop;
+
+function scrollProgress(top, total, viewport) {
+  return total > viewport ? top / (total - viewport) : 0;
+}
+
+editor.on('scroll', () => {
+  const { top, height, clientHeight } = editor.getScrollInfo();
+  if (expectedEditorTop !== undefined && Math.abs(top - expectedEditorTop) < 2) {
+    expectedEditorTop = undefined;
+    return;
+  }
+  expectedEditorTop = undefined;
+
+  const previewRange = previewPane.scrollHeight - previewPane.clientHeight;
+  const target = scrollProgress(top, height, clientHeight) * previewRange;
+  if (Math.abs(previewPane.scrollTop - target) >= 1) {
+    previewPane.scrollTop = target;
+    expectedPreviewTop = previewPane.scrollTop;
+  }
+});
+
+previewPane.addEventListener('scroll', () => {
+  const { scrollTop, scrollHeight, clientHeight } = previewPane;
+  if (expectedPreviewTop !== undefined && Math.abs(scrollTop - expectedPreviewTop) < 2) {
+    expectedPreviewTop = undefined;
+    return;
+  }
+  expectedPreviewTop = undefined;
+
+  const { top, height, clientHeight: editorHeight } = editor.getScrollInfo();
+  const target = scrollProgress(scrollTop, scrollHeight, clientHeight) * Math.max(0, height - editorHeight);
+  if (Math.abs(top - target) >= 1) {
+    expectedEditorTop = target;
+    editor.scrollTo(null, target);
+  }
+}, { passive: true });
 
 const renderer = new WxRenderer({
   theme: yanqiTheme,

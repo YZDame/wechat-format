@@ -122,14 +122,17 @@ body {
 
 .preview-pane {
   overflow: auto;
-  background: var(--preview-bg);
+  padding: 16px 12px;
+  background: var(--bg);
 }
 
 .preview {
-  max-width: 720px;
+  width: 375px;
+  max-width: 100%;
   min-height: 100%;
   margin: 0 auto;
-  padding: 24px clamp(14px, 3vw, 40px);
+  padding: 20px;
+  box-shadow: 0 0 0 1px var(--border);
   background: var(--preview-bg);
   color: #3e3e3e;
   overflow-wrap: anywhere;
@@ -155,10 +158,7 @@ body {
 .code-snippet__fix {
   display: flex;
   margin: 16px 0;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--bg-secondary);
-  color: var(--text);
+  color: #333;
 }
 
 .code-snippet__fix .code-snippet__line-index {
@@ -185,6 +185,12 @@ body {
 }
 
 .code-snippet__fix code { display: block; font: inherit; }
+
+:root[data-theme="dark"] .preview .code-snippet__fix {
+  border-color: var(--border-hover) !important;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text) !important;
+}
 
 .CodeMirror {
   height: 100%;

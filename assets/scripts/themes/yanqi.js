@@ -182,14 +182,14 @@ var yanqiTheme = {
       color: "#2584B5"
     },
     th: {
-      background: "#EB7250",
-      color: "#F8F8F8",
-      border: "1px solid #F5CBAE",
+      background: "#2584B5",
+      color: "#FFFFFF",
+      border: "1px solid #B7D7E7",
       'font-weight': "700",
       padding: "4px 8px"
     },
     td: {
-      border: "1px solid #F5CBAE",
+      border: "1px solid #B7D7E7",
       padding: "4px 8px"
     }
   }
